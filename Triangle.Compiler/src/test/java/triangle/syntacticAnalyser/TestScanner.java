@@ -69,7 +69,7 @@ public class TestScanner {
 
 	@Test
 	public void testBarDemo() {
-		compileExpectFailure("/bardemo.tri");
+		compileExpectSuccess("/bardemo.tri");
 	}
 	
 

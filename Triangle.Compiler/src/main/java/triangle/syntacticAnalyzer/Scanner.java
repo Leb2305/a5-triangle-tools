@@ -39,7 +39,7 @@ public final class Scanner {
 
 	public static boolean isOperator(char c) {
 		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>' || c == '\\'
-				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?');
+				|| c == '&' || c == '@' || c == '%' || c == '^' || c == '?' || c == '|');
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -186,6 +186,7 @@ public final class Scanner {
 		case '%':
 		case '^':
 		case '?':
+		case '|':
 			takeIt();
 			while (isOperator(currentChar))
 				takeIt();

@@ -105,6 +105,7 @@ import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 import triangle.codeGenerator.entities.AddressableEntity;
+import triangle.codeGenerator.entities.BarPrimitiveRoutine;
 import triangle.codeGenerator.entities.EqualityRoutine;
 import triangle.codeGenerator.entities.FetchableEntity;
 import triangle.codeGenerator.entities.Field;
@@ -187,7 +188,13 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	}
 	@Override
 	public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
-	return null;
+		var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, 0);
+		var loopAddr = emitter.getNextInstrAddr();
+		ast.C.visit(this, frame);
+		emitter.patch(jumpAddr);
+		ast.E.visit(this, frame);
+		emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
+		return null;
 	}
 
 	// Expressions
@@ -723,6 +730,7 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 	 */
 	private final void elaborateStdEnvironment() {
 		tableDetailsReqd = false;
+		StdEnvironment.barDecl.entity = new BarPrimitiveRoutine();
 		elaborateStdConst(StdEnvironment.falseDecl, Machine.falseRep);
 		elaborateStdConst(StdEnvironment.trueDecl, Machine.trueRep);
 		elaborateStdPrimRoutine(StdEnvironment.notDecl, Primitive.NOT);
